@@ -19,35 +19,71 @@
           >
             Home
           </router-link>
-          <router-link class="navbar-item"
-            :to="{name: 'dashboard'}"
-          >
-            Admino Bosso
-          </router-link>
-          <router-link class="navbar-item"
-            :to="{name: 'dashboard'}"
-          >
-            Dashboard
-          </router-link>
+          <template v-if="authenticated">
+            <router-link class="navbar-item"
+              :to="{name: 'dashboard'}"
+            >
+              Menu
+            </router-link>
+            <router-link class="navbar-item"
+              :to="{name: 'dashboard'}"
+            >
+              Dashboard
+            </router-link>
+          </template>
         </div>
 
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
-                <strong>Sign up</strong>
-              </a>
-              <a class="button is-light">
-                <strong>Sign out</strong>
-              </a>
-              <router-link class="button is-light"
-                 :to="{name: 'signin'}"
-              >
-                Sing in
-              </router-link>
+              <template v-if="authenticated">
+                <a class="button is-light" @click="signOut">
+                  Sign out
+                </a>
+                <a class="button is-light">
+                  {{user.name}}
+                </a>
+              </template>
+              <template v-if="!authenticated">
+                <a class="button is-primary">
+                  <strong>Sign up</strong>
+                </a>
+                <router-link class="button is-light"
+                   :to="{name: 'signin'}"
+                >
+                  Sing in
+                </router-link>
+              </template>
             </div>
           </div>
         </div>
       </div>
     </nav>
 </template>
+
+<script>
+  import { mapGetters, mapActions } from 'vuex'
+
+  export default {
+    computed: {
+      ...mapGetters({
+        authenticated: 'auth/authenticated',
+        user: 'auth/user'
+      })
+    },
+
+    methods: {
+      ...mapActions({
+        signOUtAction: 'auth/signOut'
+      }),
+
+      signOut () {
+        this.signOUtAction().then(() => {
+          this.$router.replace({
+            name: 'home'
+          })
+        })
+      }
+    }
+  }
+</script>
