@@ -30,6 +30,11 @@
             >
               Dashboard
             </router-link>
+            <router-link class="navbar-item"
+              :to="{name: 'settings'}"
+            >
+              Settings
+            </router-link>
           </template>
         </div>
 
